@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Tour {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  destination   String
+  destinations  String   // JSON array of destination names
+  durationDays  Int
+  durationLabel String
+  category      String
+  style         String
+  priceDisplay  String   @default("Tailored Quote / Price on Request")
+  featured      Boolean  @default(false)
+  image         String
+  gallery       String   // JSON array of image URLs
+  overview      String
+  highlights    String   // JSON array of strings
+  itinerary     String   // JSON array of { day, title, description }
+  included      String   // JSON array of strings
+  excluded      String   // JSON array of strings
+  travelInfo    String   @default("")
+  translations  String   @default("{}")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Destination {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  region      String
+  tagline     String
+  description String
+  image       String
+  experiences String   // JSON array of strings
+  translations String   @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String
+  readTime  String   @default("5 min read")
+  image     String
+  excerpt   String
+  content   String   // JSON array of paragraphs
+  published Boolean  @default(true)
+  translations String   @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BookingInquiry {
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String
+  phone      String   @default("")
+  travelDate String   @default("")
+  guests     String   @default("2")
+  tourSlug   String   @default("")
+  tourTitle  String   @default("")
+  notes      String   @default("")
+  status     String   @default("NEW") // NEW | CONTACTED | QUOTED | CONFIRMED | ARCHIVED
+  adminNotes String   @default("")
+  replyMessage String @default("")
+  repliedAt    DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ContactMessage {
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String
+  phone      String   @default("")
+  subject    String   @default("General Inquiry")
+  message    String
+  status     String   @default("NEW") // NEW | READ | REPLIED | ARCHIVED
+  adminNotes String   @default("")
+  replyMessage String @default("")
+  repliedAt    DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("footer")
+  createdAt DateTime @default(now())
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
